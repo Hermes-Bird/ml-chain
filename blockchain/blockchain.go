@@ -2,6 +2,7 @@ package blockchain
 
 import (
 	"fmt"
+	"github.com/Hermes-Bird/ml-chain/wallet"
 	"log"
 )
 
@@ -15,7 +16,7 @@ func NewBlockchain() *Blockchain {
 	}
 }
 
-func (bc *Blockchain) AddBlock(data any) Block {
+func (bc *Blockchain) AddBlock(data []wallet.Transaction) Block {
 	newBlock := MineBlock(bc.Chain[len(bc.Chain)-1], data)
 	bc.Chain = append(bc.Chain, newBlock)
 
@@ -50,4 +51,16 @@ func (bc *Blockchain) ReplaceChain(newChain []Block) {
 
 	log.Println("Replace current chain with a new one")
 	bc.Chain = newChain
+}
+
+func (bc *Blockchain) GetChainTransactions() []wallet.Transaction {
+	var transactions []wallet.Transaction
+
+	for _, block := range bc.Chain {
+		for _, tx := range block.Data {
+			transactions = append(transactions, tx)
+		}
+	}
+
+	return transactions
 }
